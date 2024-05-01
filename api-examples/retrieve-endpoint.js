@@ -49,26 +49,24 @@ const getRecordsArgs = (page, colors) => {
 };
 
 const fetchData = (apiPath, requestedPageNumber) => {
-  return (
-    fetch(apiPath)
-      .then((response) => {
-        console.log("RESPONSE", response);
+  return fetch(apiPath)
+    .then((response) => {
+      console.log("RESPONSE", response);
+      return response;
+    })
+    .then((response) => response.json())
+    .then((response) => {
+      if (response) {
         return response;
-      })
-      .then((response) => response.json())
-      .then((response) => {
-        if (response) {
-          return response;
-          // return getPages(response);
-        }
-        return [];
-      })
-      .then((pages) => getFormattedResponse(pages, requestedPageNumber))
-      .catch((e) => {
-        console.log(e);
-        return false;
-      })
-  );
+        // return getPages(response);
+      }
+      return [];
+    })
+    .then((pages) => getFormattedResponse(pages, requestedPageNumber))
+    .catch((e) => {
+      console.log(e);
+      return false;
+    });
 };
 
 const getFormattedResponse = (pages, requestedPageNumber) => {

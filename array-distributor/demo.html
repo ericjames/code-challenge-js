@@ -1,0 +1,140 @@
+<html>
+
+<head>
+  <script src="array-distributor.js"></script>
+</head>
+
+<style>
+  input,
+  button {
+    padding: 0.5em;
+    font: inherit;
+  }
+
+  .distributor {
+    display: flex;
+    margin-top: 2em;
+    gap: 0.2em;
+    background: #eee;
+    padding: 2em;
+    min-height: 5em;
+
+  }
+
+  .distributor div {
+    flex: 0 1 100%;
+    min-width: 2em;
+    height: 2em;
+    border: 2px solid #555;
+    font-size: 2em;
+    text-align: center;
+    animation: 200ms ease-in fadein;
+  }
+
+  @keyframes fadein {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1
+    }
+  }
+</style>
+
+
+<body>
+
+  <h1>Array Distributor</h1>
+
+  <b>How many values in your array? (allowed values 2 - 10)</b>
+  <input type="number" max="10" min="2" id="count" onkeyup="showStartingArray()" onchange="showStartingArray()" />
+  <button onclick="playDistribution()">Play Distribution!</button>
+
+  <div id="start" class="distributor"></div>
+
+
+  <h2>Distribution Center</h2>
+  <div id="dist" class="distributor"></div>
+
+
+  <script>
+    const colors = ['#FF6633', '#FFB399', '#FF33FF', '#FFFF99', '#00B3E6',
+      '#E6B333', '#3366E6', '#999966', '#99FF99', '#B34D4D'];
+    const count = document.getElementById("count");
+
+    function showStartingArray() {
+      if (!validate()) return null;
+
+      const dist = document.getElementById("start");
+      dist.innerHTML = null;
+      for (var i = 0; i < count.value; i++) {
+        const ele = document.createElement("div");
+        ele.style.backgroundColor = colors[i];
+        ele.textContent = i;
+        dist.appendChild(ele);
+      }
+      showPlaceholderDistribution();
+    }
+
+    function showPlaceholderDistribution() {
+      if (!validate()) return null;
+
+      const dist = document.getElementById("dist");
+      dist.innerHTML = null;
+      for (var i = 0; i < count.value; i++) {
+        const ele = document.createElement("div");
+        ele.style.backgroundColor = "#ccc";
+        dist.appendChild(ele);
+      }
+    }
+
+    function playDistribution() {
+      if (!validate()) return null;
+
+      const inputArray = [];
+      for (let i = 0; i < count.value; i++) {
+        inputArray.push(i);
+      }
+
+      const distributionList = getDistributedList(inputArray);
+      // console.log("distributionList", distributionList);
+
+      for (let j = 0; j < distributionList.length; j++) {
+        const value = distributionList[j];
+        // We play position to where it is reported in the distributionList array
+        const reportedPosition = distributionList.indexOf(value);
+        // console.log("initial", value, "reported", reportedPosition, "index", j);
+        const delay = value * 250;
+        // Code challenge could be to swap value with j and it will play consecutively 
+        playValue(delay, value, reportedPosition);
+      }
+    }
+
+    function playValue(delay, value, reportedPosition) {
+      setTimeout(function () {
+
+        const ele = document.createElement("div");
+        ele.style.backgroundColor = colors[value];
+        ele.textContent = value;
+
+        const dist = document.getElementById("dist");
+        const oldNode = dist.children[reportedPosition];
+        oldNode.replaceWith(ele);
+
+        // console.log("playValue", value, "reported at", reportedPosition, oldNode, ele);
+
+      }, delay);
+    }
+
+    function validate() {
+      return (count.value >= 2 && count.value <= 10);
+    }
+
+
+  </script>
+
+
+</body>
+
+</html>

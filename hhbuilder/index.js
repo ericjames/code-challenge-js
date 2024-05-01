@@ -1,4 +1,3 @@
-// your code goes here ...
 "use strict";
 
 // Elements
